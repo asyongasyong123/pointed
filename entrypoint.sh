@@ -1,11 +1,15 @@
 #!/bin/sh
 set -e
 
-# ✅ Bag-ong variable nga ngalan
-if [ -n "$POINTED_SERVER_IP" ]; then
-    sed -i "s/POINTED_SERVER_IP_PLACEHOLDER/$POINTED_SERVER_IP/g" /etc/xray.json
-fi
+# ✅ Siguroha nga naay permiso
+chmod +x /usr/local/bin/xray
 
+# Sugdi ang Xray sa likod
 /usr/local/bin/xray run -c /etc/xray.json &
+XRAY_PID=$!
+
+# Hulata kadiyot aron masugdan ang Xray
 sleep 3
+
+# Sugdi ang Nginx sa foreground
 exec nginx -g 'daemon off;'
