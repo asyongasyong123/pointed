@@ -45,12 +45,6 @@
       }
     }
   ],
-  "outbounds": [
-    {"protocol": "freedom", "tag": "direct"},
-    {"protocol": "blackhole", "tag": "block"}
-  ],
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-    "rules": []
-  }
+  "outbounds": [{"protocol": "freedom", "tag": "direct"}],
+  "routing": {"domainStrategy": "IPIfNonMatch", "rules": []}
 }
