@@ -2,19 +2,15 @@ name: Build & Push Docker Image
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # ✅ Dugang: Siguroha nga naay permiso ang entrypoint.sh
-      - name: Fix file permissions
-        run: chmod +x entrypoint.sh
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -26,10 +22,12 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN4 }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: true
-          tags: jthandg/pointed:latest
-          cache-from: type=registry,ref=jthandg/pointed:buildcache
-          cache-to: type=registry,ref=jthandg/pointed:buildcache,mode=max
+          tags: docker.io/jthandg/pointed:latest
+          platforms: linux/amd64
+          cache-from: ""
+          cache-to: ""
