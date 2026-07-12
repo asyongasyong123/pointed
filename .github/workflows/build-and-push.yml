@@ -26,6 +26,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: jthandg/pointed:latest
+          tags: docker.io/jthandg/pointed:latest
           cache-from: type=registry,ref=jthandg/pointed:buildcache
           cache-to: type=registry,ref=jthandg/pointed:buildcache,mode=max
