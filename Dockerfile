@@ -1,6 +1,7 @@
 FROM alpine:3.20
 
 ENV XRAY_VERSION=1.8.24
+ENV POINTED_IP=127.0.0.1
 
 RUN apk update --no-cache && apk add --no-cache \
     nginx wget unzip ca-certificates tzdata
@@ -13,9 +14,13 @@ RUN rm -rf /etc/nginx/conf.d/* /etc/nginx/http.d/*
 
 COPY xray.json /etc/xray/config.json
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
 
-CMD ["/entrypoint.sh"]
+# ✅ Direkta na nga sugo, walay entrypoint.sh
+CMD ["/bin/sh", "-c", "\
+sed -i \"s|\\${POINTED_IP}|${POINTED_IP}|g\" /etc/xray/config.json && \
+xray run -c /etc/xray/config.json & \
+sleep 4 && \
+nginx -g 'daemon off;' \
+"]
