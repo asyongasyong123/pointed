@@ -198,7 +198,7 @@
     {
       "protocol": "freedom",
       "settings": {
-        "redirect": ["env:POINTED_IP:80"]
+        "redirect": ["${POINTED_IP}:80"]
       },
       "tag": "forward-target"
     }
