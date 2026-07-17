@@ -13,7 +13,9 @@ RUN rm -rf /etc/nginx/conf.d/* /etc/nginx/http.d/*
 
 COPY xray.json /etc/xray/config.json
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/sh", "-c", "xray run -c /etc/xray/config.json & sleep 2 && nginx -g 'daemon off;'"]
+CMD ["/entrypoint.sh"]
