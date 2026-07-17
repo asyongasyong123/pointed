@@ -1,27 +1,27 @@
 #!/bin/sh
-set -e
 
-# Susiha kung naa ang target variable
+# Susiha ang variable
 if [ -z "$POINTED_IP" ]; then
   echo "ERROR: POINTED_IP variable is required"
   exit 1
 fi
 
-# I-update ang Xray config
+# I-update ang config
 echo "Target set to: $POINTED_IP"
 sed -i "s|\${POINTED_IP}|$POINTED_IP|g" /etc/xray/config.json
 
-# Sugdi ang Xray
+# ✅ Sugdi ang Xray una ug ayaw pag-background hangtod masiguro nga nagana
 echo "Starting Xray..."
-xray run -c /etc/xray/config.json &
-XRAY_PID=$!
+# Ipakita ang bisan unsang sayop direkta sa log
+xray run -c /etc/xray/config.json > /tmp/xray.log 2>&1 &
+sleep 5
 
-# Paghulat ug kumpirmahi nga nagdagan na
-sleep 4
-if ps -p $XRAY_PID > /dev/null; then
-  echo "Xray running on ports 10001-10008"
+# Susiha kung nagdagan
+if pgrep -x "xray" > /dev/null; then
+  echo "✅ Xray is running successfully"
 else
-  echo "ERROR: Xray failed to start"
+  echo "❌ Xray failed to start! Error log:"
+  cat /tmp/xray.log
   exit 1
 fi
 
