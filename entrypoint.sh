@@ -1,7 +1,5 @@
 #!/bin/sh
-# Ilisi ang variable sa sulod sa config
-sed -i "s|env:POINTED_IP|${POINTED_IP}|g" /etc/xray/config.json
-# Sugdi ang Xray
-xray run -c /etc/xray/config.json &
-sleep 2
-nginx -g 'daemon off;'
+sed -i "s|env:POINTED_IP|${POINTED_IP}|g" /etc/xray.json
+/usr/local/bin/xray run -c /etc/xray.json &
+sleep 3
+exec /usr/local/openresty/bin/openresty -g 'daemon off;'
