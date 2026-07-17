@@ -1,14 +1,19 @@
 FROM alpine:3.20
 
-RUN apk add --no-cache nginx ca-certificates bash tzdata
+ENV XRAY_VERSION=1.8.24
 
-COPY xray /usr/local/bin/xray
-RUN chmod +x /usr/local/bin/xray
+RUN apk update --no-cache && apk add --no-cache \
+    nginx wget unzip ca-certificates tzdata
+
+RUN wget --no-check-certificate -qO /tmp/xray.zip https://github.com/XTLS/Xray-core/releases/download/v${XRAY_VERSION}/Xray-linux-64.zip && \
+    unzip /tmp/xray.zip -d /usr/local/bin/ && rm /tmp/xray.zip && \
+    chmod +x /usr/local/bin/xray
+
+RUN rm -rf /etc/nginx/conf.d/* /etc/nginx/http.d/*
 
 COPY xray.json /etc/xray/config.json
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
-CMD ["/entrypoint.sh"]
+
+ENTRYPOINT ["/bin/sh", "-c", "xray run -c /etc/xray/config.json & sleep 2 && nginx -g 'daemon off;'"]
