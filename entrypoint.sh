@@ -1,5 +1,15 @@
 #!/bin/sh
-sed -i "s|env:POINTED_IP|${POINTED_IP}|g" /etc/xray.json
-/usr/local/bin/xray run -c /etc/xray.json &
+# I-replace ang env variable sa config
+sed -i "s|env:POINTED_IP|${POINTED_IP}|g" /etc/xray/config.json
+
+# Ipakita kung sakto ang target para masusi
+echo "✅ Forwarding to target: ${POINTED_IP}:80"
+
+# Sugdi ang Xray sa background
+xray run -c /etc/xray/config.json &
+
+# Paghulat gamay para andam na ang Xray
 sleep 3
-exec /usr/local/openresty/bin/openresty -g 'daemon off;'
+
+# Sugdi ang Nginx sa foreground
+exec nginx -g 'daemon off;'
