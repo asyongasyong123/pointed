@@ -4,19 +4,6 @@
     "access": "none",
     "error": "none"
   },
-  "dns": {
-    "servers": ["8.8.8.8", "8.8.4.4"],
-    "strategy": "UseIPv4"
-  },
-  "policy": {
-    "levels": {
-      "0": {
-        "handshake": 4,
-        "connIdle": 3600,
-        "bufferSize": 524288
-      }
-    }
-  },
   "inbounds": [
     {
       "port": 10001,
@@ -68,17 +55,7 @@
     {
       "protocol": "freedom",
       "tag": "direct",
-      "settings": {
-        "domainStrategy": "UseIPv4",
-        "redirect": "TARGET_IP_HERE:443"
-      }
-    },
-    {
-      "protocol": "blackhole",
-      "tag": "blocked",
-      "settings": {
-        "response": {"type": "none"}
-      }
+      "settings": {"domainStrategy": "UseIPv4"}
     }
   ],
   "routing": {
