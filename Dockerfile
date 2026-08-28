@@ -1,7 +1,11 @@
 FROM golang:1.21-alpine AS build
 WORKDIR /app
-COPY . .
-RUN go mod init proxy && go mod tidy
+
+COPY main.go .
+
+# ✅ Maghimo og go.mod sa sulod — dili na kinahanglan sa repo!
+RUN go mod init pointed-proxy && go mod tidy
+
 RUN go build -ldflags="-s -w" -o proxy
 
 FROM alpine:3.20
