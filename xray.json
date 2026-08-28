@@ -4,6 +4,19 @@
     "access": "none",
     "error": "none"
   },
+  "dns": {
+    "servers": ["8.8.8.8", "8.8.4.4"],
+    "strategy": "UseIPv4"
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "handshake": 4,
+        "connIdle": 3600,
+        "bufferSize": 512
+      }
+    }
+  },
   "inbounds": [
     {
       "port": 10001,
@@ -13,7 +26,9 @@
       "settings": {
         "clients": [{"password": "xray-2026", "level": 0}]
       },
-      "sniffing": {"enabled": false},
+      "sniffing": {
+        "enabled": false
+      },
       "streamSettings": {
         "network": "ws",
         "wsSettings": {"path": "/tr-ws-xray"},
@@ -36,7 +51,9 @@
         "clients": [{"id": "a7b2c9d4-1e3f-4a5b-8c9d-0e1f2a3b4c5d", "level": 0}],
         "decryption": "none"
       },
-      "sniffing": {"enabled": false},
+      "sniffing": {
+        "enabled": false
+      },
       "streamSettings": {
         "network": "ws",
         "wsSettings": {"path": "/vl-ws-xray"},
@@ -56,6 +73,39 @@
       "protocol": "freedom",
       "tag": "direct",
       "settings": {"domainStrategy": "UseIPv4"}
+    },
+    {
+      "protocol": "trojan",
+      "tag": "pointed-relay",
+      "settings": {
+        "servers": [
+          {
+            "address": "POINTED_SERVER_PLACEHOLDER",
+            "port": 443,
+            "password": "xray-2026"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "wsSettings": {
+          "path": "/tr-ws-xray",
+          "headers": {
+            "Host": "POINTED_SERVER_PLACEHOLDER"
+          }
+        },
+        "tlsSettings": {
+          "serverName": "POINTED_SERVER_PLACEHOLDER"
+        }
+      }
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "blocked",
+      "settings": {
+        "response": {"type": "none"}
+      }
     }
   ],
   "routing": {
@@ -64,7 +114,7 @@
       {
         "type": "field",
         "inboundTag": ["trojan-ws", "vless-ws"],
-        "outboundTag": "direct"
+        "outboundTag": "TARGET_OUTBOUND_PLACEHOLDER"
       }
     ]
   }
