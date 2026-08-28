@@ -1,206 +1,94 @@
 {
   "log": {
-    "loglevel": "warning"
+    "loglevel": "warning",
+    "access": "none",
+    "error": "none"
+  },
+  "dns": {
+    "servers": ["8.8.8.8", "8.8.4.4"],
+    "strategy": "UseIPv4"
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "handshake": 4,
+        "connIdle": 3600,
+        "bufferSize": 524288
+      }
+    }
   },
   "inbounds": [
     {
       "port": 10001,
-      "listen": "::",
+      "listen": "127.0.0.1",
       "protocol": "trojan",
-      "tag": "ws-trojan",
+      "tag": "trojan-ws",
       "settings": {
-        "clients": [{"password": "ws-pointed", "level": 0}]
+        "clients": [{"password": "xray-2026", "level": 0}]
       },
+      "sniffing": {"enabled": false},
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/ws-tr-pointed", "host": "*"},
+        "wsSettings": {"path": "/tr-ws-xray"},
         "sockopt": {
-          "tcpFastOpen": true,
           "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
+          "tcpKeepAlive": true,
+          "tcpKeepAliveIdle": 15,
+          "tcpKeepAliveInterval": 8,
           "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
+          "tcpFastOpen": true
         }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
+      }
     },
     {
       "port": 10002,
-      "listen": "::",
+      "listen": "127.0.0.1",
       "protocol": "vless",
-      "tag": "ws-vless",
+      "tag": "vless-ws",
       "settings": {
-        "clients": [{"id": "d41d8cd9-8f00-3204-a980-0988ec0721d3", "level": 0}],
+        "clients": [{"id": "a7b2c9d4-1e3f-4a5b-8c9d-0e1f2a3b4c5d", "level": 0}],
         "decryption": "none"
       },
+      "sniffing": {"enabled": false},
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/ws-vl-pointed", "host": "*"},
+        "wsSettings": {"path": "/vl-ws-xray"},
         "sockopt": {
-          "tcpFastOpen": true,
           "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
+          "tcpKeepAlive": true,
+          "tcpKeepAliveIdle": 15,
+          "tcpKeepAliveInterval": 8,
           "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
+          "tcpFastOpen": true
         }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
-    },
-    {
-      "port": 10003,
-      "listen": "::",
-      "protocol": "vmess",
-      "tag": "ws-vmess",
-      "settings": {
-        "clients": [{"id": "e3b0c442-98fc-1c14-9afb-f4c8996fb924", "alterId": 0, "level": 0}]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {"path": "/ws-vm-pointed", "host": "*"},
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
-          "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
-    },
-    {
-      "port": 10004,
-      "listen": "::",
-      "protocol": "shadowsocks",
-      "tag": "ws-ss",
-      "settings": {
-        "method": "chacha20-ietf-poly1305",
-        "password": "ws-pointed",
-        "network": "tcp,udp"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {"path": "/ws-ss-pointed", "host": "*"},
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
-          "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
-    },
-    {
-      "port": 10005,
-      "listen": "::",
-      "protocol": "trojan",
-      "tag": "hu-trojan",
-      "settings": {
-        "clients": [{"password": "hu-pointed", "level": 0}]
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/hu-tr-pointed", "host": "*"},
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
-          "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
-    },
-    {
-      "port": 10006,
-      "listen": "::",
-      "protocol": "vless",
-      "tag": "hu-vless",
-      "settings": {
-        "clients": [{"id": "d41d8cd9-8f00-3204-a980-0988ec0721d3", "level": 0}],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/hu-vl-pointed", "host": "*"},
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
-          "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
-    },
-    {
-      "port": 10007,
-      "listen": "::",
-      "protocol": "vmess",
-      "tag": "hu-vmess",
-      "settings": {
-        "clients": [{"id": "e3b0c442-98fc-1c14-9afb-f4c8996fb924", "alterId": 0, "level": 0}]
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/hu-vm-pointed", "host": "*"},
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
-          "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
-    },
-    {
-      "port": 10008,
-      "listen": "::",
-      "protocol": "shadowsocks",
-      "tag": "hu-ss",
-      "settings": {
-        "method": "chacha20-ietf-poly1305",
-        "password": "hu-pointed",
-        "network": "tcp,udp"
-      },
-      "streamSettings": {
-        "network": "httpupgrade",
-        "httpupgradeSettings": {"path": "/hu-ss-pointed", "host": "*"},
-        "sockopt": {
-          "tcpFastOpen": true,
-          "tcpNoDelay": true,
-          "tcpKeepAliveIdle": 30,
-          "tcpKeepAliveInterval": 15,
-          "tcpKeepAliveProbes": 3,
-          "tcpQuickAck": true,
-          "tcpCongestion": "bbr"
-        }
-      },
-      "sniffing": {"enabled": true, "destOverride": ["http", "tls", "fakedns"], "routeOnly": true}
+      }
     }
   ],
   "outbounds": [
     {
       "protocol": "freedom",
+      "tag": "direct",
       "settings": {
-        "redirect": ["${POINTED_IP}:80"]
-      },
-      "tag": "forward-target"
+        "domainStrategy": "UseIPv4",
+        "redirect": "TARGET_IP_HERE:443"
+      }
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "blocked",
+      "settings": {
+        "response": {"type": "none"}
+      }
     }
-  ]
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": ["trojan-ws", "vless-ws"],
+        "outboundTag": "direct"
+      }
+    ]
+  }
 }
