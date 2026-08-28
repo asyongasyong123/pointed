@@ -1,30 +1,21 @@
 #!/bin/sh
+set -e
 
-# Susiha ang variable
-if [ -z "$POINTED_IP" ]; then
-  echo "ERROR: POINTED_IP variable is required"
-  exit 1
-fi
+echo "🔧 Reading TARGET_IP from environment variable..."
 
-# I-update ang config
-echo "Target set to: $POINTED_IP"
-sed -i "s|\${POINTED_IP}|$POINTED_IP|g" /etc/xray/config.json
-
-# ✅ Sugdi ang Xray una ug ayaw pag-background hangtod masiguro nga nagana
-echo "Starting Xray..."
-# Ipakita ang bisan unsang sayop direkta sa log
-xray run -c /etc/xray/config.json > /tmp/xray.log 2>&1 &
-sleep 5
-
-# Susiha kung nagdagan
-if pgrep -x "xray" > /dev/null; then
-  echo "✅ Xray is running successfully"
+# ✅ Kung walay gibutang nga IP — mag-error ug magpahibalo
+if [ -z "$TARGET_IP" ]; then
+  echo "⚠️ TARGET_IP not set — using default (no redirect)"
+  export TARGET_IP="127.0.0.1"
 else
-  echo "❌ Xray failed to start! Error log:"
-  cat /tmp/xray.log
-  exit 1
+  echo "✅ Target IP set to: $TARGET_IP"
 fi
 
-# Sugdi ang Nginx
-echo "Starting Nginx on port 8080"
-exec nginx -g 'daemon off;'
+# 🔄 Ilisi ang TARGET_IP_HERE sa xray.json gamit ang value gikan sa console
+sed -i "s/TARGET_IP_HERE:443/${TARGET_IP}:443/g" /etc/xray/config.json
+
+echo "✅ Config updated — Starting services..."
+
+# 🚀 Pagpadagan sa Nginx ug Xray
+nginx -g "daemon off;" &
+exec xray run -c /etc/xray/config.json
