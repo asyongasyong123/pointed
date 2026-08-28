@@ -18,12 +18,16 @@ func handleClient(clientConn net.Conn, targetAddr string) {
     }
     defer remoteConn.Close()
 
+    // 📥 Client → Remote
     go func() {
         io.Copy(remoteConn, clientConn)
-        remoteConn.CloseWrite()
+        // ✅ Ayaw na gamita ang CloseWrite — i-close na lang direkta
+        remoteConn.Close()
     }()
 
+    // 📤 Remote → Client
     io.Copy(clientConn, remoteConn)
+    clientConn.Close()
 }
 
 func main() {
@@ -32,7 +36,7 @@ func main() {
     targetPort := os.Getenv("TARGET_PORT")
     
     if targetPort == "" {
-        targetPort = "80" // default port 80 — mas dali mogana
+        targetPort = "80"
     }
     
     targetAddr := targetHost + ":" + targetPort
