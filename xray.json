@@ -24,14 +24,14 @@
       "protocol": "trojan",
       "tag": "trojan-ws",
       "settings": {
-        "clients": [{"password": "xray-2026", "level": 0}]
+        "clients": [{"password": "pointed-2026", "level": 0}]
       },
       "sniffing": {
         "enabled": false
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/tr-ws-xray"},
+        "wsSettings": {"path": "/tr-ws-pointed"},
         "sockopt": {
           "tcpNoDelay": true,
           "tcpKeepAlive": true,
@@ -56,7 +56,7 @@
       },
       "streamSettings": {
         "network": "ws",
-        "wsSettings": {"path": "/vl-ws-xray"},
+        "wsSettings": {"path": "/vl-ws-pointed"},
         "sockopt": {
           "tcpNoDelay": true,
           "tcpKeepAlive": true,
