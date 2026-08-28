@@ -96,7 +96,8 @@
           }
         },
         "tlsSettings": {
-          "serverName": "POINTED_SERVER_PLACEHOLDER"
+          "serverName": "POINTED_SERVER_PLACEHOLDER",
+          "allowInsecure": true
         }
       }
     },
