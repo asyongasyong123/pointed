@@ -1,5 +1,4 @@
-name: Build & Push Docker Image
-
+name: Docker Image Release Workflow Multi-Arch
 on:
   push:
     branches: [ main ]
@@ -7,7 +6,7 @@ on:
     types: [published]
 
 jobs:
-  build-and-push:
+  docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,10 +24,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build & Push
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: jthandg/pointed:latest
+          
