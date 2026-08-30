@@ -1,2 +1,1 @@
-palpak toh wag gamitin masisira ang araw mo🤣
-pointed deployer
+credits to the owner...ginaya ko lang to...
